@@ -1,6 +1,6 @@
 # FAQCanvas
 
-FAQCanvas is a simple final year project for website support. It does not generate answers with AI. Instead, the admin saves frequently asked questions and answers, and the widget finds the closest matching saved question.
+FAQCanvas is a simple project for website support. It does not generate answers with AI. Instead, the admin saves frequently asked questions and answers, and the widget finds the closest matching saved question.
 
 ## Simple idea
 
@@ -209,11 +209,19 @@ After deployment, use this script on any website:
 <script src="https://yourusername.pythonanywhere.com/embed.js" data-site-key="demo-store"></script>
 ```
 
-## Very simple explanation for presentation
+### 10. Go and check the live project
 
-You can explain deployment like this:
+click on the link:
 
-1. I uploaded my Flask project to PythonAnywhere.
+```html
+https://hassanibnasad.pythonanywhere.com
+```
+
+## Very simple explanation
+
+
+
+1. Upload Flask project to PythonAnywhere.
 2. PythonAnywhere runs my Flask app online.
 3. The app stores FAQs in SQLite.
 4. The widget sends the user question to Flask.
@@ -230,4 +238,4 @@ The matching is intentionally simple and uses Python's built-in `difflib` librar
 - Return the answer of the question with the highest score
 - If the score is too low, show a fallback support message
 
-This makes the project easy to implement and easy to explain in a college presentation because it is still a normal text comparison, not AI.
+This makes the project easy to implement, it is still a normal text comparison, not AI.
