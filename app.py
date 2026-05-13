@@ -237,6 +237,62 @@ def get_current_website(user_id):
         connection.close()
 
 
+def get_widget_preview(site_key):
+    if not site_key:
+        return {
+            "site_name": "Support Widget",
+            "suggestions": [],
+            "welcome_message": "Hi! Ask a question and I'll look for the best saved answer.",
+        }
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            """
+            SELECT user_id, site_name
+            FROM websites
+            WHERE site_key = ?
+            LIMIT 1
+            """,
+            (site_key,),
+        )
+        website = cursor.fetchone()
+
+        if not website:
+            return {
+                "site_name": "Support Widget",
+                "suggestions": [],
+                "welcome_message": "Hi! Ask a question and I'll look for the best saved answer.",
+            }
+
+        cursor.execute(
+            """
+            SELECT question
+            FROM faqs
+            WHERE user_id = ?
+            ORDER BY id ASC
+            LIMIT 3
+            """,
+            (website["user_id"],),
+        )
+        suggestions = [row["question"] for row in cursor.fetchall()]
+
+        welcome_message = "Hi! Ask a question and I'll look for the best saved answer."
+        if suggestions:
+            welcome_message = f'Hi! Try asking something like "{suggestions[0]}"'
+
+        return {
+            "site_name": website["site_name"],
+            "suggestions": suggestions,
+            "welcome_message": welcome_message,
+        }
+    finally:
+        cursor.close()
+        connection.close()
+
+
 def create_user_account(name, email, password):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -603,10 +659,15 @@ def ask_question():
         connection.close()
 
 
+@app.route("/api/widget/config")
+def widget_config():
+    site_key = request.args.get("site_key", "").strip()
+    return jsonify(get_widget_preview(site_key))
+
+
 @app.route("/widget")
 def widget():
-    site_key = request.args.get("site_key", "").strip()
-    return render_template("widget.html", site_key=site_key)
+    return render_template("widget.html")
 
 
 @app.route("/embed.js")
