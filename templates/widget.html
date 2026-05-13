@@ -29,6 +29,11 @@
                 linear-gradient(180deg, rgba(240, 249, 255, 0.95), rgba(248, 250, 252, 0.98));
         }
 
+        .widget-message {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
         .widget-fade-in {
             animation: widget-fade-in 200ms ease-out;
         }
@@ -66,8 +71,8 @@
             </div>
         </div>
 
-        <div id="chat-box" class="widget-chat min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4">
-            <div id="widget-welcome-message" class="widget-fade-in max-w-[88%] rounded-[1.25rem] rounded-tl-md border border-slate-200/80 bg-white px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm">
+        <div id="chat-box" class="widget-chat flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-4">
+            <div id="widget-welcome-message" class="widget-message widget-fade-in max-w-[88%] rounded-[1.25rem] rounded-tl-md border border-slate-200/80 bg-white px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm">
                 Hi! Ask a question and I'll look for the best saved answer.
             </div>
         </div>

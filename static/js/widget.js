@@ -6,16 +6,36 @@ const suggestionsContainer = document.getElementById("widget-suggestions");
 const widgetTitle = document.getElementById("widget-title");
 const welcomeMessage = document.getElementById("widget-welcome-message");
 const siteKey = window.widgetConfig.siteKey;
+let hasStartedConversation = false;
+
+function scrollMessageIntoView(message, alignToTop = false) {
+  message.scrollIntoView({
+    behavior: "smooth",
+    block: alignToTop ? "start" : "end",
+  });
+}
+
+function collapseSuggestions() {
+  if (!suggestionsPanel) return;
+
+  suggestionsPanel.classList.add("hidden");
+}
+
+function clearWelcomeMessage() {
+  if (!welcomeMessage || !welcomeMessage.isConnected) return;
+
+  welcomeMessage.remove();
+}
 
 function addMessage(text, sender = "bot") {
   const bubble = document.createElement("div");
   bubble.className =
     sender === "user"
-      ? "widget-fade-in ml-auto max-w-[88%] rounded-[1.25rem] rounded-br-md bg-slate-900 px-4 py-3 text-sm leading-6 text-white"
-      : "widget-fade-in max-w-[88%] rounded-[1.25rem] rounded-tl-md bg-white px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm";
+      ? "widget-message widget-fade-in ml-auto max-w-[88%] rounded-[1.25rem] rounded-br-md bg-slate-900 px-4 py-3 text-sm leading-6 text-white"
+      : "widget-message widget-fade-in max-w-[88%] rounded-[1.25rem] rounded-tl-md border border-slate-200/80 bg-white px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm";
   bubble.textContent = text;
   chatBox.appendChild(bubble);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  scrollMessageIntoView(bubble, sender === "bot");
 }
 
 function renderSuggestions(suggestions) {
@@ -69,6 +89,12 @@ async function loadWidgetConfig() {
 
 async function sendQuestion(question) {
   if (!question) return;
+
+  if (!hasStartedConversation) {
+    clearWelcomeMessage();
+    collapseSuggestions();
+    hasStartedConversation = true;
+  }
 
   addMessage(question, "user");
   widgetQuestionInput.value = "";
